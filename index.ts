@@ -3,7 +3,8 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 
 const allowedOrigins = ["http://localhost:7100"];
-
+ 
+//
 
 const app = express();
 const port = 3000;
