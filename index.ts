@@ -2,12 +2,12 @@ import express from "express";
 const bodyParser = require("body-parser");
 const cors = require("cors");
 
-const allowedOrigins = ["http://localhost:3000"];
+const allowedOrigins = ["http://localhost:7100"];
 
 const app = express();
 const port = 3000;
 // TODO: - add localhost:3000 the only allowed origins
-app.use(cors());
+app.use(cors(allowedOrigins));
 app.use(bodyParser.json());
 app.use("/api/v1/board", require("./routes/board"));
 app.use("/api/v1/column", require("./routes/column"));
