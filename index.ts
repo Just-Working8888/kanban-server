@@ -4,6 +4,7 @@ const cors = require("cors");
 
 const allowedOrigins = ["http://localhost:7100"];
 
+
 const app = express();
 const port = 3000;
 // TODO: - add localhost:3000 the only allowed origins
