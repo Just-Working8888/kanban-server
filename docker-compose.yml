@@ -1,0 +1,32 @@
+version: "3.8"
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: express-backend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: "postgresql://postgres:8082@localhost:5433/mydatabase?schema=public"
+    volumes:
+      - .:/app
+      - /app/node_modules
+
+  postgres:
+    image: postgres:13
+    container_name: postgres-db
+    ports:
+      - "5433:5432" # Изменен внешний порт на 5433
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 8082
+      POSTGRES_DB: mydatabase
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
