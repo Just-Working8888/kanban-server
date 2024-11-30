@@ -101,11 +101,13 @@ export const getTask = async (req: Request, res: Response) => {
 
 export const createTask = async (req: Request, res: Response) => {
   try {
-    const { title, description, subTasks, columnId } = req.body.data;
+    const { title, description, subTasks, columnId, priority, dueDate } = req.body.data;
 
     try {
       await createTaskSchema.validate({
         title: title,
+        priority: priority,
+        dueDate: dueDate,
         description: description,
         subTasks: subTasks,
         columnId: columnId,
@@ -130,6 +132,8 @@ export const createTask = async (req: Request, res: Response) => {
         data: {
           title: title,
           description: description,
+          priority: priority,
+          dueDate: dueDate,
           position: totalRecords + 1,
           columnId: columnId,
         },
@@ -227,12 +231,14 @@ export const updateTask = async (req: Request, res: Response) => {
   try {
     const taskId = req.query["taskId"] as string;
 
-    const { title, description, subTasks, columnId } = req.body.data;
+    const { title, description, subTasks, columnId, dueDate, priority } = req.body.data;
 
     try {
       await createTaskSchema.validate({
         title,
         description,
+        dueDate,
+        priority,
         subTasks,
         columnId,
       });
@@ -275,6 +281,24 @@ export const updateTask = async (req: Request, res: Response) => {
           data: { columnId: columnId },
         });
 
+      if (dueDate !== task?.dueDate)
+        await prisma.task.update({
+          where: {
+            id: taskId,
+          },
+          data: {
+            dueDate: dueDate,
+          },
+        });
+      if (priority !== task?.priority)
+        await prisma.task.update({
+          where: {
+            id: taskId,
+          },
+          data: {
+            priority: priority,
+          },
+        });
       // make a map to so the faster searching;
       const databaseSubTasks = subTasks;
 
