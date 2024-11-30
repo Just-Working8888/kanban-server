@@ -72,6 +72,7 @@ export const getTask = async (req: Request, res: Response) => {
         priority: true,
         dueDate: true,
         color: true,
+        assignedUsers: true,
         subTask: {
           orderBy: { position: "asc" },
           select: {

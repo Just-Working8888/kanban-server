@@ -9,9 +9,15 @@ datasource db {
 }
 
 model User {
-  id       String @id @default(uuid())
+  id       String   @id @default(uuid())
   userName String
-  email    String
+  email    String   @unique
+  password String
+  role     UserRole @default(USER) // Поле для роли
+  avatar   String? // Поле для аватара (можно быть пустым)
+  createAt DateTime @default(now())
+  updateAt DateTime @updatedAt
+  tasks    Task[]   @relation("TaskAssignment") // Связь с задачами
 }
 
 model Board {
@@ -33,18 +39,19 @@ model Columns {
 }
 
 model Task {
-  id          String    @id @default(uuid())
-  columnId    String
-  position    Int
-  description String
-  color       String
-  priority    Priority  @default(MEDIUM) // Добавлено поле для приоритета
-  dueDate     DateTime? // Добавлено поле для срока выполнения
-  createAt    DateTime  @default(now())
-  updateAt    DateTime  @updatedAt
-  title       String
-  subTask     SubTask[]
-  columName   Columns   @relation(fields: [columnId], references: [id], onDelete: Cascade)
+  id            String    @id @default(uuid())
+  columnId      String
+  position      Int
+  description   String
+  color         String
+  priority      Priority  @default(MEDIUM) // Добавлено поле для приоритета
+  dueDate       DateTime? // Добавлено поле для срока выполнения
+  createAt      DateTime  @default(now())
+  updateAt      DateTime  @updatedAt
+  title         String
+  subTask       SubTask[]
+  assignedUsers User[]    @relation("TaskAssignment") // Связь с пользователями
+  columName Columns @relation(fields: [columnId], references: [id], onDelete: Cascade)
 }
 
 model SubTask {
@@ -67,4 +74,9 @@ enum Priority {
   LOW
   MEDIUM
   HIGH
+}
+
+enum UserRole {
+  ADMIN
+  USER
 }
