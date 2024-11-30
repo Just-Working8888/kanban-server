@@ -71,6 +71,7 @@ export const getTask = async (req: Request, res: Response) => {
         position: true,
         priority: true,
         dueDate: true,
+        color: true,
         subTask: {
           orderBy: { position: "asc" },
           select: {
@@ -101,7 +102,7 @@ export const getTask = async (req: Request, res: Response) => {
 
 export const createTask = async (req: Request, res: Response) => {
   try {
-    const { title, description, subTasks, columnId, priority, dueDate } = req.body.data;
+    const { title, description, subTasks, columnId, priority, dueDate, color } = req.body.data;
 
     try {
       await createTaskSchema.validate({
@@ -111,6 +112,7 @@ export const createTask = async (req: Request, res: Response) => {
         description: description,
         subTasks: subTasks,
         columnId: columnId,
+        color: color
       });
     } catch (error: any) {
       const response: errorMessage = {
@@ -136,6 +138,7 @@ export const createTask = async (req: Request, res: Response) => {
           dueDate: dueDate,
           position: totalRecords + 1,
           columnId: columnId,
+          color: color,
         },
       });
 
@@ -166,8 +169,10 @@ export const createTask = async (req: Request, res: Response) => {
     res.status(200).send(response);
   } catch (error) {
     const response: errorMessage = {
-      message: "Something went wrong",
+      message: "Something went wrong" + error,
     };
+    console.log(error);
+
     res.status(500).send(response);
   }
 };
@@ -197,6 +202,50 @@ export const deleteTask = async (req: Request, res: Response) => {
     };
     res.status(500).send(response);
   }
+};
+
+export const updateTaskColor = async (req: Request, res: Response) => {
+  try {
+    const taskId = req.query["taskId"] as string;
+
+    const { color } = req.body.data;
+
+    try {
+      await createTaskSchema.validate({
+        color
+      });
+    } catch (error: any) {
+      const response: errorMessage = {
+        message: error.message,
+      };
+      res.status(400).send(response);
+      return;
+    }
+
+    const result = prisma.$transaction(async () => {
+      const task = await prisma.task.findFirst({
+        where: { id: taskId },
+        include: { subTask: true },
+      });
+
+      // if the title of the task is changed, update the title
+      if (color !== task?.color)
+        await prisma.task.update({
+          where: {
+            id: taskId,
+          },
+          data: {
+            color: color,
+          },
+        });
+    });
+
+    const response: successMessage = {
+      message: "Updated successfully",
+      data: result,
+    };
+    res.status(200).send(response);
+  } catch (error) { }
 };
 
 export const updateSubTaskStatus = async (req: Request, res: Response) => {

@@ -3,6 +3,7 @@ import {
   deleteTask,
   getTask,
   updateTask,
+  updateTaskColor,
 } from "./../controllers/taskController";
 import { validateColumnId } from "./../middleware/validateColumnId";
 import { validateTaskId } from "./../middleware/validateTaskId";
@@ -17,6 +18,8 @@ router.post("/", validateColumnId, createTask);
 router.delete("/", validateTaskId, validateColumnId, deleteTask);
 
 router.put("/updateTask", validateTaskId, updateTask);
+
+router.put('updateTaskColor', validateTaskId, updateTaskColor)
 // TODO: made updateTask functionality
 
 module.exports = router;

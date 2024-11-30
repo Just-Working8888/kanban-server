@@ -37,6 +37,7 @@ model Task {
   columnId    String
   position    Int
   description String
+  color       String
   priority    Priority  @default(MEDIUM) // Добавлено поле для приоритета
   dueDate     DateTime? // Добавлено поле для срока выполнения
   createAt    DateTime  @default(now())
