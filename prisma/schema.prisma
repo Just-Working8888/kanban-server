@@ -37,6 +37,8 @@ model Task {
   columnId    String
   position    Int
   description String
+  priority    Priority  @default(MEDIUM) // Добавлено поле для приоритета
+  dueDate     DateTime? // Добавлено поле для срока выполнения
   createAt    DateTime  @default(now())
   updateAt    DateTime  @updatedAt
   title       String
@@ -58,4 +60,10 @@ model SubTask {
 enum SubTaskStatus {
   COMPLETE
   INCOMPLETE
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
 }

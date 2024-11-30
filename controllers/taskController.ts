@@ -69,6 +69,8 @@ export const getTask = async (req: Request, res: Response) => {
         columnId: true,
         columName: true,
         position: true,
+        priority: true,
+        dueDate: true,
         subTask: {
           orderBy: { position: "asc" },
           select: {
@@ -370,5 +372,5 @@ export const updateTask = async (req: Request, res: Response) => {
     };
 
     res.status(200).send(response);
-  } catch (error) {}
+  } catch (error) { }
 };
