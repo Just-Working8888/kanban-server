@@ -39,6 +39,8 @@ export const getAllColumns = async (req: Request, res: Response) => {
             title: true,
             description: true,
             position: true,
+            priority: true,
+            dueDate: true,
             subTask: {
               orderBy: { position: "asc" },
               select: {
