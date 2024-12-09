@@ -5,7 +5,7 @@ import path from "path";
 
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const allowedOrigins = ["http://localhost:7100"];
+const allowedOrigins = ["*"];
 
 //sss
 
