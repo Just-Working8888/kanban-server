@@ -1,11 +1,11 @@
 import express from "express";
 import authRouter from './routes/auth'
-import userRouter  from './routes/user'
+import userRouter from './routes/user'
 import path from "path";
 
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const allowedOrigins = ["*"];
+const allowedOrigins = ["*", 'http://localhost:5173',];
 
 //sss
 
