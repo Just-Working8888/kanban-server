@@ -136,6 +136,7 @@ export const createTask = async (req: Request, res: Response) => {
           title: title,
           description: description,
           priority: priority,
+          image: '',
           dueDate: dueDate,
           position: totalRecords + 1,
           columnId: columnId,
@@ -160,14 +161,20 @@ export const createTask = async (req: Request, res: Response) => {
           },
         });
       }
+
+      return result; // Обязательно возвращаем объект task
+
     });
 
-    const response: successMessage = {
-      message: "All the columns name",
-      data: [],
-    };
+    // const response: successMessage = {
 
-    res.status(200).send(response);
+    //   message: "All the columns name",
+    //   data: {
+    //     taskId: result, // Возвращаем ID задачи
+    //   },
+    // };
+
+    res.status(200).send(result);
   } catch (error) {
     const response: errorMessage = {
       message: "Something went wrong" + error,

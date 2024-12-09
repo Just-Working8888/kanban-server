@@ -9,23 +9,39 @@ datasource db {
 }
 
 model User {
-  id       String   @id @default(uuid())
-  userName String
-  email    String   @unique
-  password String
-  role     UserRole @default(USER) // Поле для роли
-  avatar   String? // Поле для аватара (можно быть пустым)
-  createAt DateTime @default(now())
-  updateAt DateTime @updatedAt
-  tasks    Task[]   @relation("TaskAssignment") // Связь с задачами
+  id        String      @id @default(uuid())
+  userName  String
+  email     String      @unique
+  password  String
+  role      UserRole    @default(USER) // Поле для роли
+  avatar    String? // Поле для аватара (можно быть пустым)
+  createAt  DateTime    @default(now())
+  updateAt  DateTime    @updatedAt
+  tasks     Task[]      @relation("TaskAssignment") // Связь с задачами
+  BoardUser BoardUser[]
+  Board     Board[]
 }
 
 model Board {
-  id       String    @id @default(uuid())
-  name     String    @unique
-  createAt DateTime  @default(now())
-  updateAt DateTime  @updatedAt
-  columns  Columns[]
+  id        String      @id @default(uuid())
+  name      String      @unique
+  createAt  DateTime    @default(now())
+  updateAt  DateTime    @updatedAt
+  columns   Columns[]
+  BoardUser BoardUser[]
+  userId    String // ID создателя доски
+  user      User        @relation(fields: [userId], references: [id])
+}
+
+model BoardUser {
+  id      String        @id @default(uuid())
+  boardId String
+  userId  String
+  role    BoardUserRole
+  board   Board         @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  user    User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([boardId, userId]) // Обеспечиваем уникальность связи
 }
 
 model Columns {
@@ -43,6 +59,7 @@ model Task {
   columnId      String
   position      Int
   description   String
+  image         String
   color         String
   priority      Priority  @default(MEDIUM) // Добавлено поле для приоритета
   dueDate       DateTime? // Добавлено поле для срока выполнения
@@ -51,7 +68,7 @@ model Task {
   title         String
   subTask       SubTask[]
   assignedUsers User[]    @relation("TaskAssignment") // Связь с пользователями
-  columName Columns @relation(fields: [columnId], references: [id], onDelete: Cascade)
+  columName     Columns   @relation(fields: [columnId], references: [id], onDelete: Cascade)
 }
 
 model SubTask {
@@ -79,4 +96,9 @@ enum Priority {
 enum UserRole {
   ADMIN
   USER
+}
+
+enum BoardUserRole {
+  CREATOR // Создатель доски
+  MEMBER // Участник доски
 }

@@ -38,6 +38,7 @@ export const getAllColumns = async (req: Request, res: Response) => {
             columnId: true,
             title: true,
             description: true,
+            image: true,
             position: true,
             priority: true,
             dueDate: true,
